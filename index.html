@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Трекер расходов — портфолио</title>
+  <meta name="description" content="Трекер расходов: добавление трат, круговая диаграмма по категориям, фильтры по категории и периоду. Данные хранятся только в браузере (localStorage)." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Шапка -->
+  <header class="header">
+    <div class="container header__inner">
+      <h1 class="header__title">Трекер расходов</h1>
+      <button type="button" class="btn-clear" id="clearAllBtn">Очистить всё</button>
+    </div>
+  </header>
+
+  <main class="container main">
+    <!-- Итог -->
+    <section class="card total" aria-labelledby="totalLabel">
+      <div class="total__main">
+        <p class="total__label" id="totalLabel">Всего потрачено</p>
+        <p class="total__value" id="totalValue">0 ₽</p>
+      </div>
+      <p class="total__count" id="totalCount">записей: 0</p>
+    </section>
+
+    <!-- Добавление расхода -->
+    <section class="card" aria-labelledby="formTitle">
+      <h2 class="card__title" id="formTitle">Добавить расход</h2>
+
+      <form class="expense-form" id="expenseForm" novalidate>
+        <div class="field">
+          <label class="visually-hidden" for="amountInput">Сумма</label>
+          <input
+            class="input"
+            id="amountInput"
+            name="amount"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="Сумма"
+            autocomplete="off"
+          />
+          <p class="field__error" id="amountError" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="visually-hidden" for="categoryInput">Категория</label>
+          <select class="input" id="categoryInput" name="category"></select>
+        </div>
+
+        <div class="field">
+          <label class="visually-hidden" for="dateInput">Дата</label>
+          <input class="input" id="dateInput" name="date" type="date" />
+        </div>
+
+        <div class="field">
+          <label class="visually-hidden" for="commentInput">Комментарий</label>
+          <input
+            class="input"
+            id="commentInput"
+            name="comment"
+            type="text"
+            placeholder="Комментарий"
+            maxlength="100"
+            autocomplete="off"
+          />
+        </div>
+
+        <button class="btn-primary" id="addBtn" type="submit" disabled>Добавить</button>
+      </form>
+    </section>
+
+    <!-- Диаграмма -->
+    <section class="card" aria-labelledby="chartTitle">
+      <h2 class="card__title" id="chartTitle">По категориям</h2>
+
+      <div class="chart-wrap" id="chartWrap">
+        <canvas id="expenseChart" role="img" aria-label="Круговая диаграмма расходов по категориям"></canvas>
+      </div>
+
+      <p class="chart-empty" id="chartEmpty" hidden>
+        Добавьте первый расход, чтобы увидеть диаграмму
+      </p>
+    </section>
+
+    <!-- История -->
+    <section class="card card--list" aria-labelledby="historyTitle">
+      <h2 class="card__title" id="historyTitle">История</h2>
+
+      <div class="filters">
+        <label class="visually-hidden" for="filterCategory">Фильтр по категории</label>
+        <select class="input" id="filterCategory"></select>
+
+        <label class="visually-hidden" for="filterPeriod">Фильтр по периоду</label>
+        <select class="input" id="filterPeriod">
+          <option value="today">Сегодня</option>
+          <option value="7">7 дней</option>
+          <option value="30">30 дней</option>
+          <option value="all" selected>Всё время</option>
+        </select>
+      </div>
+
+      <div class="expense-list" id="expenseList"></div>
+
+      <div class="list-empty" id="listEmpty" hidden>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1"
+             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1Z" />
+          <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
+          <path d="M12 17.5v-11" />
+        </svg>
+        <p>Пока нет расходов. Добавьте первый выше</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">Данные хранятся только в вашем браузере</div>
+  </footer>
+
+  <!-- Тост -->
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
